@@ -33,7 +33,8 @@ tube_inner_r = bar_r+tube_tol;
 tube_outer_r = tube_inner_r+tube_t;
 
 // screw positions
-screw_inner_offset_x = 10;          // some offset so it's easier to screw in because of the rails
+screw_inner_offset_x = 25;          // some offset so it's easier to screw in because of the rails
+screw_outer_offset_x = 10;
 screw_outer_offset_y = 0.35*tube_y; // screws on the outside are positioned on the y axis by some offset from the center
 
 // screw (hole) dimensions - currently for M3.5
@@ -46,7 +47,7 @@ screw_seating_clearance = 0.5;      // some air between screw and seating
 screw_seating_t = 2;                // screw seating wall thickness
 screw_seating_r = screw_head_r + screw_seating_clearance + screw_seating_t;
 
-fillet_r = 4.5;
+fillet_r = 6;
 fillet_base_y = 4*screw_seating_r;
 
 
@@ -104,7 +105,7 @@ module screw_seatings() {
       
     linear_extrude(height=tube_inner_r) {
         screw_positions_outer() {
-            screw_seating();
+            screw_seating(seating_offset_x=screw_outer_offset_x);
         }
         screw_positions_inner() {
             rotate([0,0,180])
@@ -130,7 +131,7 @@ module screw_holes() {
 
 module screw_positions_outer() {
     screw_ys = [-screw_outer_offset_y, screw_outer_offset_y];
-    screw_x = tube_outer_r + screw_seating_r;
+    screw_x = tube_outer_r + screw_seating_r + screw_outer_offset_x;
     
     for(i = [0:1:1]) {
         translate([screw_x, screw_ys[i] + tube_y/2, 0])
