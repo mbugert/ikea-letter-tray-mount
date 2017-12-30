@@ -1,0 +1,4 @@
+*.csg
+*.dxf
+*.stl
+target/
