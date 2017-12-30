@@ -1,31 +1,54 @@
-// https://www.thingiverse.com/thing:422252/
-// released under CC attribution license
-use <uploads_a1_41_64_c7_58_2dfillet.scad>
+// Copyright 2017, mbugert
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
 
+use <2dfillet.scad>
+
+
+// measurements from Ikea DOKUMENT
+bar_r = 5;
+between_crossbars_y = 98;
+
+
+// object settings
 $fn=100;
 $fillet_fn=24;
 
-// measurements from Ikea DOKUMENT (currently guesstimates)
-bar_r = 3.5;
-between_crossbars_y = 105;
-
 tube_y = between_crossbars_y;
-tube_t = 3;         // tube thickness of base
-tube_tol = 0.25;    // add some air on the inside of the tube
+tube_t = 3.5;                       // tube thickness of base
+tube_tol = 0.2;                     // add some air on the inside of the tube
 tube_inner_r = bar_r+tube_tol;
 tube_outer_r = tube_inner_r+tube_t;
 
 // screw positions
-screw_inner_offset_x = 10;
+screw_inner_offset_x = 10;          // some offset so it's easier to screw in because of the rails
+screw_outer_offset_y = 0.35*tube_y; // screws on the outside are positioned on the y axis by some offset from the center
 
-// screw dimensions
-screw_grooving_diameter = 3;
-screw_head_r = 5.5/2;
-screw_head_depth = 2;
-screw_head_clearance = 0.5;
-screw_seating_t = 1;
-screw_seating_r = screw_head_r + screw_head_clearance + screw_seating_t;
-screw_depth = 10; // something high, doesn't matter
+// screw (hole) dimensions - currently for M3.5
+screw_grooving_diameter = 3.7;
+screw_head_r = 3.5;
+screw_head_depth = 3;
+
+screw_depth = 10;                   // something high, doesn't matter
+screw_seating_clearance = 0.5;      // some air between screw and seating
+screw_seating_t = 2;                // screw seating wall thickness
+screw_seating_r = screw_head_r + screw_seating_clearance + screw_seating_t;
+
+fillet_r = 4.5;
+fillet_base_y = 4*screw_seating_r;
+
 
 module halftube() {
     out_r = tube_outer_r;
@@ -63,27 +86,29 @@ module screw(grooving_diameter, screw_depth, head_diameter, head_depth) {
 }
 
 module screw_seatings() {
-    module screw_seating(fillet_r, fillet_base_y, fillet_base_offset_x=0) {
-        dummy = 1;       
-        fillet_display(fillet_r, fn_fillet=$fillet_fn) {
-            translate([-(screw_seating_r + dummy + fillet_base_offset_x), -fillet_base_y/2])
-                square([dummy, fillet_base_y]);
-            circle(screw_seating_r);
-        }
+    module screw_seating(seating_offset_x=0) {       
+        dummy = 1;
+        translate([-(seating_offset_x+screw_seating_r),0])
+            fillet_display(fillet_r, fn_fillet=$fillet_fn) {
+                // bridge towards the screw seating
+                translate([0,-screw_seating_r])
+                    square([seating_offset_x+screw_seating_r, 2*screw_seating_r]);
+                
+                // fillet base (so that the filletting touches the half tube nicely)
+                translate([-dummy, -fillet_base_y/2])
+                    square([dummy, fillet_base_y]);
+            }
+        // screw seating itself
+        circle(screw_seating_r);
     }
-    fillet_outer_r = 6;
-    fillet_inner_r = 20.5;
-    
-    fillet_base_y_outer = 4*screw_seating_r;
-    fillet_base_y_inner = 0.5*tube_y;
-    
+      
     linear_extrude(height=tube_inner_r) {
         screw_positions_outer() {
-            screw_seating(fillet_outer_r, fillet_base_y_outer);
+            screw_seating();
         }
         screw_positions_inner() {
             rotate([0,0,180])
-                screw_seating(fillet_inner_r, fillet_base_y_inner, fillet_base_offset_x=screw_inner_offset_x);
+                screw_seating(seating_offset_x=screw_inner_offset_x);
         }
     }
 }
@@ -92,7 +117,7 @@ module screw_holes() {
     module screw_hole() {
         dif = 1;
         translate([0,0,tube_inner_r+dif])
-            screw(screw_grooving_diameter, screw_depth+2*dif, 2*screw_head_r+2*screw_head_clearance, screw_head_depth+dif);
+            screw(screw_grooving_diameter, screw_depth+2*dif, 2*screw_head_r+2*screw_seating_clearance, screw_head_depth+dif);
     }
     
     screw_positions_outer() {
@@ -103,10 +128,8 @@ module screw_holes() {
     }
 }
 
-module screw_positions_outer() {   
-    // screws are positioned on the y axis by some offset from the center
-    screw_y_inner_offset = 0.35*tube_y;
-    screw_ys = [-screw_y_inner_offset, screw_y_inner_offset];
+module screw_positions_outer() {
+    screw_ys = [-screw_outer_offset_y, screw_outer_offset_y];
     screw_x = tube_outer_r + screw_seating_r;
     
     for(i = [0:1:1]) {
