@@ -28,8 +28,9 @@ $fillet_fn=24;
 
 tube_y = between_crossbars_y;
 tube_t = 3.5;                       // tube thickness of base
-tube_tol = 0.2;                     // add some air on the inside of the tube
-tube_inner_r = bar_r+tube_tol;
+tube_tol_r = 0.4;                   // add some air on the inside of the tube
+tube_tol_z = 1.2;                   // additional tube height to ensure that the screw seatings are flush with the table
+tube_inner_r = bar_r+tube_tol_r;
 tube_outer_r = tube_inner_r+tube_t;
 
 // screw positions
@@ -58,7 +59,7 @@ module halftube() {
     
     rotate([-90,0,0])
         linear_extrude(height=tube_y)
-            translate([0,-in_r])
+            translate([0,-(in_r+tube_tol_z)])
                 difference() {
                     // outer
                     union() {
@@ -68,12 +69,12 @@ module halftube() {
                                 square(out_r*[2,1]);
                         }
                         translate([-out_r,0])
-                            square([2*out_r, in_r]);
+                            square([2*out_r, in_r+tube_tol_z]);
                     }
                     // inner
                     circle(r=in_r);
                     translate([-in_r,0])
-                        square([2*in_r, out_r+dif]);
+                        square([2*in_r, out_r+tube_tol_z+dif]);
                 }
 }
 
