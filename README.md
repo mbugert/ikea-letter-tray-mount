@@ -1,5 +1,9 @@
 # Ikea letter tray mount
-For mounting a Ikea DOKUMENT letter tray underneath a table
+For mounting a Ikea DOKUMENT letter tray underneath a table.
+
+![Front](docs/front.jpg)
+![3D preview of mounting piece from this repo](docs/ikea-letter-tray-mount.jpg)
+![Mounting piece in the wild](docs/mount_rl.jpg)
 
 ## How to build one
 ### Notable tools/materials needed
@@ -19,3 +23,5 @@ The only thing worth customizing might be the screw holes. The part is made with
 
 ## Dependencies
 The code uses [2dfillet for OpenSCAD by Thingiverse user TakeItAndRun](https://www.thingiverse.com/thing:422252), licensed under GPLv2.
+
+![Back](docs/back.jpg)
