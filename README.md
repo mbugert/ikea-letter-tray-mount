@@ -13,7 +13,7 @@ For mounting a Ikea DOKUMENT letter tray underneath a table.
 * M3.5 screws
 
 ### Steps
-1. 3d-print the object from this repo two times
+1. 3d-print [the STL of the mounting piece](https://github.com/mbugert/ikea-letter-tray-mount/releases) **two times**
 2. Saw off the bent sections from the letter tray (where the feet are attached)
 3. Screw the letter tray to the underside of a table of your choice
 
