@@ -34,12 +34,12 @@ tube_inner_r = bar_r+tube_tol_r;
 tube_outer_r = tube_inner_r+tube_t;
 
 // screw positions
-screw_inner_offset_x = 25;          // some offset so it's easier to screw in because of the rails
-screw_outer_offset_x = 10;
+screw_inner_offset_x = 30;          // some offset so it's easier to screw in because of the rails
+screw_outer_offset_x = 15;
 screw_outer_offset_y = 0.35*tube_y; // screws on the outside are positioned on the y axis by some offset from the center
 
 // screw (hole) dimensions - currently for M3.5
-screw_grooving_diameter = 3.7;
+screw_grooving_diameter = 4;
 screw_head_r = 3.5;
 screw_head_depth = 3;
 
