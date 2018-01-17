@@ -1,4 +1,4 @@
-# Ikea letter tray mount
+# Upside-down Ikea letter tray mount
 For mounting a Ikea DOKUMENT letter tray underneath a table.
 
 ![Front](docs/front.jpg)
